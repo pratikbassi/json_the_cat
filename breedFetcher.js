@@ -1,29 +1,27 @@
 const request = require('request');
 
 
-
-
-
 const fetchBreedDescription = (breedName, callback) => {
 
   request(`https://api.thecatapi.com/v1/breeds/search?q=${breedName.slice(0, 3)}`, (error, response, body) => {
     if (!error) {
       const data = JSON.parse(body);
       let data2 = null;
-      if (data.length > 1) {
+      if (data.length >= 1) {
         for (let item in data) {
           if (data[item]['name'] === breedName) {
             data2 = data[item];
           }
         }
-      }
+      } 
+
       if (data2 !== null) {
-        callback(null, data2['description']);
+        callback(null, data2['description'].trim());
       } else {
-        callback(error);
+        callback(error, null);
       }
     } else {
-      callback(error);
+      callback(error, null);
     }
     
   });
